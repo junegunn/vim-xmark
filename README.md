@@ -25,7 +25,7 @@ Usage
 -----
 
 `:Xmark` command is added for Markdown files. After running the command, the
-rendered content of the file will be loaded on the browser.
+rendered content will be loaded on the browser every time you save the file.
 
 ```vim
 " Does not resize nor move the windows
