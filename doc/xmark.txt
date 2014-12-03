@@ -1,0 +1,99 @@
+xmark.txt	xmark	Last change: December 4 2014
+XMARK - TABLE OF CONTENTS                                      *xmark* *xmark-toc*
+==============================================================================
+
+  vim-xmark
+    Prerequisite                                                     |xmark-1|
+    Installation                                                     |xmark-2|
+    Usage                                                            |xmark-3|
+    Known issues                                                     |xmark-4|
+    Acknowledgment                                                   |xmark-5|
+    License                                                          |xmark-6|
+
+
+VIM-XMARK                                                            *vim-xmark*
+==============================================================================
+
+Markdown preview on OS X. Uses AppleScript to resize the windows.
+
+
+                                                                       *xmark-1*
+PREREQUISITE                                                *xmark-prerequisite*
+==============================================================================
+
+Xmark requires {pandoc}{1} and {Google Chrome}{2}.
+>
+    brew install pandoc
+<
+                                         {1} http://johnmacfarlane.net/pandoc/
+                                         {2} http://www.google.com/chrome/
+
+
+                                                                       *xmark-2*
+INSTALLATION                                                *xmark-installation*
+==============================================================================
+
+Using {vim-plug}{3}:
+>
+    Plug 'junegunn/vim-xmark'
+<
+                                      {3} https://github.com/junegunn/vim-plug
+
+
+                                                                       *xmark-3*
+USAGE                                                              *xmark-usage*
+==============================================================================
+
+                                                                        *:Xmark*
+
+`:Xmark` command is added for Markdown files. After running the command, the
+rendered content of the file will be loaded on the browser.
+>
+    " Does not resize nor move the windows
+    :Xmark
+
+    " Vim on the left, browser on the right
+    :Xmark>
+
+    " On the left
+    :Xmark<
+
+    " On the top
+    :Xmark+
+
+    " On the bottom
+    :Xmark-
+
+    " Reload the page and resize the windows by saving it
+    :w
+<
+If you see `osascript is not allowed assistive access` message, add your
+terminal emulator to the list in `System Preferences` -> `Security & Privacy`
+-> `Privacy` -> `Accessibility`. (You can drag and drop the application icon
+to the list.)
+
+
+                                                                       *xmark-4*
+KNOWN ISSUES                                                *xmark-known-issues*
+==============================================================================
+
+ - Resizing may not work if the terminal emulator is in fullscreen mode
+ - Currently only supports Chrome
+ - May have issues with multiple displays
+
+
+                                                                       *xmark-5*
+ACKNOWLEDGMENT                                            *xmark-acknowledgment*
+==============================================================================
+
+CSS is based on: https://gist.github.com/killercup/5917178
+
+
+                                                                       *xmark-6*
+LICENSE                                                          *xmark-license*
+==============================================================================
+
+{MIT}{4}
+
+==============================================================================
+vim:tw=78:sw=2:ts=2:ft=help:norl:nowrap:
