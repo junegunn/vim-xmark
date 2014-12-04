@@ -34,7 +34,16 @@ let s:css  = expand('<sfile>:p:h') . '/css/pandoc.css'
 let s:scpt = expand('<sfile>:p:h') . '/applescript/template.scpt'
 let s:tmp  = {}
 
-function! s:xmark(resize)
+function! s:xmark(resize, bang)
+  let grp = '_xmark_buffer_' . bufnr('%') . '_'
+  if a:bang
+    execute 'augroup' grp
+      autocmd!
+    augroup END
+    execute 'augroup!' grp
+    return
+  endif
+
   if !executable('pandoc')
     echohl WarningMsg
     echom 'pandoc is not found. Try `brew install pandoc`'
@@ -54,8 +63,7 @@ function! s:xmark(resize)
 
   if !has_key(s:tmp, bufnr('%'))
     let s:tmp[bufnr('%')] = tempname() . '.html'
-    execute 'augroup _xmark_buffer_' . bufnr('%') . '_'
-    augroup _xmark_buffer_
+    execute 'augroup' grp
       autocmd!
       " BufUnload is triggered twice for some reason so we simply put silent!
       autocmd BufUnload    <buffer> silent! call delete(remove(s:tmp, expand('<abuf>')))
@@ -98,7 +106,7 @@ endfunction
 
 augroup _xmark_filetype_
   autocmd!
-  autocmd FileType mkd,markdown command! -buffer -bar -nargs=? Xmark call s:xmark(<q-args>)
+  autocmd FileType mkd,markdown command! -buffer -bar -bang -nargs=? Xmark call s:xmark(<q-args>, <bang>0)
 augroup END
 
 let &cpo = s:cpo_save

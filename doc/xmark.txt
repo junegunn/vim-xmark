@@ -66,6 +66,9 @@ rendered content will be loaded on the browser every time you save the file.
 
     " Reload the page and resize the windows by saving it
     :w
+
+    " Turn off Xmark
+    :Xmark!
 <
 If you see `osascript is not allowed assistive access` message, add your
 terminal emulator to the list in `System Preferences` -> `Security & Privacy`
