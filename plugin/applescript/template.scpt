@@ -41,10 +41,10 @@ tell application "System Events"
                   set position of window 1 to {0 + scr_width / 2, 0}
               else if "{{ resize }}" is "+" and it is frontmost or "{{ resize }}" is "-" and name is "{{ app }}" then
                   set size     of window 1 to {scr_width, scr_height / 2}
-                  set position of window 1 to {0, scr_height / 2}
+                  set position of window 1 to {0, 0}
               else if "{{ resize }}" is "+" and name is "{{ app }}" or "{{ resize }}" is "-" and it is frontmost then
                   set size     of window 1 to {scr_width, scr_height / 2}
-                  set position of window 1 to {0, 0}
+                  set position of window 1 to {0, scr_height / 2}
               end if
           end repeat
         end tell
