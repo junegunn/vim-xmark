@@ -63,13 +63,14 @@ function! s:xmark(resize, bang)
 
   if !has_key(s:tmp, bufnr('%'))
     let s:tmp[bufnr('%')] = tempname() . '.html'
-    execute 'augroup' grp
-      autocmd!
-      " BufUnload is triggered twice for some reason so we simply put silent!
-      autocmd BufUnload    <buffer> silent! call delete(remove(s:tmp, expand('<abuf>')))
-      autocmd BufWritePost <buffer> call s:reload()
-    augroup END
   endif
+
+  execute 'augroup' grp
+    autocmd!
+    " BufUnload is triggered twice for some reason so we simply put silent!
+    autocmd BufUnload    <buffer> silent! call delete(remove(s:tmp, expand('<abuf>')))
+    autocmd BufWritePost <buffer> call s:reload()
+  augroup END
 endfunction
 
 function! s:render(vars)
