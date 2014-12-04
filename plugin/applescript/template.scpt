@@ -18,7 +18,8 @@ on open_browser()
                 end if
             end repeat
         end repeat
-        open location u
+        make new window
+        set URL of active tab of window 1 to u
     end tell
 end open_browser
 
@@ -33,17 +34,17 @@ tell application "System Events"
         tell p
           repeat 2 times
               if "{{ resize }}" is ">" and it is frontmost or "{{ resize }}" is "<" and name is "{{ app }}" then
-                  set size     of windows to {scr_width / 2, scr_height}
-                  set position of windows to {0, 0}
+                  set size     of window 1 to {scr_width / 2, scr_height}
+                  set position of window 1 to {0, 0}
               else if "{{ resize }}" is ">" and name is "{{ app }}" or "{{ resize }}" is "<" and it is frontmost then
-                  set size     of windows to {scr_width / 2, scr_height}
-                  set position of windows to {0 + scr_width / 2, 0}
+                  set size     of window 1 to {scr_width / 2, scr_height}
+                  set position of window 1 to {0 + scr_width / 2, 0}
               else if "{{ resize }}" is "+" and it is frontmost or "{{ resize }}" is "-" and name is "{{ app }}" then
-                  set size     of windows to {scr_width, scr_height / 2}
-                  set position of windows to {0, scr_height / 2}
+                  set size     of window 1 to {scr_width, scr_height / 2}
+                  set position of window 1 to {0, scr_height / 2}
               else if "{{ resize }}" is "+" and name is "{{ app }}" or "{{ resize }}" is "-" and it is frontmost then
-                  set size     of windows to {scr_width, scr_height / 2}
-                  set position of windows to {0, 0}
+                  set size     of window 1 to {scr_width, scr_height / 2}
+                  set position of window 1 to {0, 0}
               end if
           end repeat
         end tell
