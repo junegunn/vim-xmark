@@ -47,9 +47,9 @@ function! s:xmark(resize)
   if !exists('s:template')
     let s:template = join(
     \ [ 'pandoc -f markdown_github -t html5 -s -M "title:{{ title }} / xmark" -H "{{ css }}" "{{ src }}" > "{{ out }}" &&',
-      \ 'osascript < <(cat << EOF',
+      \ 'osascript -e "$(cat << EOF',
       \ join(readfile(s:scpt), "\n"),
-      \ 'EOF', ')' ], "\n")
+      \ 'EOF', ')"' ], "\n")
   endif
 
   if !has_key(s:tmp, bufnr('%'))
@@ -67,7 +67,7 @@ endfunction
 function! s:render(vars)
   let output = s:template
   for [k, v] in items(a:vars)
-    let output = substitute(output, '{{ *'.k.' *}}', escape(v, '"'), 'g')
+    let output = substitute(output, '{{ *'.k.' *}}', escape(v, '"'."'"), 'g')
   endfor
   return output
 endfunction
