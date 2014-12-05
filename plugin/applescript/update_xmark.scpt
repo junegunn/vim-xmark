@@ -1,4 +1,4 @@
-on open_browser()
+on update_xmark()
     tell application "{{ app }}"
         if it is not running then
             activate
@@ -21,9 +21,9 @@ on open_browser()
         make new window
         set URL of active tab of window 1 to u
     end tell
-end open_browser
+end update_xmark
 
-open_browser()
+update_xmark()
 
 tell application "Finder"
     set {scr_left, scr_top, scr_width, scr_height} to bounds of window of desktop

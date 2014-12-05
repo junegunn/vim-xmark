@@ -29,10 +29,29 @@ let g:loaded_xmark = 1
 let s:cpo_save = &cpo
 set cpo&vim
 
-let s:self = expand('<sfile>:p')
-let s:css  = expand('<sfile>:p:h') . '/css/pandoc.css'
-let s:scpt = expand('<sfile>:p:h') . '/applescript/template.scpt'
-let s:tmp  = {}
+let s:dir = expand('<sfile>:p:h')
+let s:files = {
+\ 'css':    s:dir . '/css/pandoc.css',
+\ 'update': s:dir . '/applescript/update_xmark.scpt',
+\ 'close':  s:dir . '/applescript/close_xmark.scpt'
+\ }
+let s:app = 'Google Chrome'
+let s:tmp = {}
+
+function! s:init_templates()
+  if !exists('s:template')
+    let s:template = {}
+    let s:template.update = join(
+    \ [ 'pandoc -f markdown_github-hard_line_breaks -t html5 -s -M "title:{{ title }} / xmark" -H "{{ css }}" "{{ src }}" > "{{ out }}" &&',
+      \ 'osascript -e "$(cat << EOF',
+      \ join(readfile(s:files.update), "\n"),
+      \ 'EOF', ')"' ], "\n")
+    let s:template.close = join(
+    \ [ 'osascript -e "$(cat << EOF',
+      \ join(readfile(s:files.close), "\n"),
+      \ 'EOF', ')"' ], "\n")
+  endif
+endfunction
 
 function! s:xmark(resize, bang)
   let grp = '_xmark_buffer_' . bufnr('%') . '_'
@@ -41,6 +60,7 @@ function! s:xmark(resize, bang)
       autocmd!
     augroup END
     execute 'augroup!' grp
+    silent! call system(s:render('close', { 'app': s:app, 'out': s:tmp[bufnr('%')] }))
     return
   endif
 
@@ -53,13 +73,7 @@ function! s:xmark(resize, bang)
 
   let b:xmark_resize = a:resize
 
-  if !exists('s:template')
-    let s:template = join(
-    \ [ 'pandoc -f markdown_github-hard_line_breaks -t html5 -s -M "title:{{ title }} / xmark" -H "{{ css }}" "{{ src }}" > "{{ out }}" &&',
-      \ 'osascript -e "$(cat << EOF',
-      \ join(readfile(s:scpt), "\n"),
-      \ 'EOF', ')"' ], "\n")
-  endif
+  call s:init_templates()
 
   if !has_key(s:tmp, bufnr('%'))
     let s:tmp[bufnr('%')] = tempname() . '.html'
@@ -73,8 +87,8 @@ function! s:xmark(resize, bang)
   augroup END
 endfunction
 
-function! s:render(vars)
-  let output = s:template
+function! s:render(template, vars)
+  let output = s:template[a:template]
   for [k, v] in items(a:vars)
     let output = substitute(output, '{{ *'.k.' *}}', escape(v, '"'."'"), 'g')
   endfor
@@ -86,14 +100,13 @@ function! s:reload()
     silent! set nofullscreen
   endif
 
-  let script = s:render({
-        \ 'app':    'Google Chrome',
+  let script = s:render('update', {
+        \ 'app':    s:app,
         \ 'title':  expand('%:t'),
         \ 'src':    expand('%:p'),
         \ 'out':    s:tmp[bufnr('%')],
         \ 'resize': b:xmark_resize,
-        \ 'css':    s:css })
-  let g:script = script
+        \ 'css':    s:files.css })
   redraw
   echon 'Rendering the page'
   let output = system(script)
