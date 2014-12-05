@@ -55,7 +55,7 @@ function! s:xmark(resize, bang)
 
   if !exists('s:template')
     let s:template = join(
-    \ [ 'pandoc -f markdown_github -t html5 -s -M "title:{{ title }} / xmark" -H "{{ css }}" "{{ src }}" > "{{ out }}" &&',
+    \ [ 'pandoc -f markdown_github-hard_line_breaks -t html5 -s -M "title:{{ title }} / xmark" -H "{{ css }}" "{{ src }}" > "{{ out }}" &&',
       \ 'osascript -e "$(cat << EOF',
       \ join(readfile(s:scpt), "\n"),
       \ 'EOF', ')"' ], "\n")
