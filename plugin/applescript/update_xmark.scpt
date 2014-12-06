@@ -1,25 +1,26 @@
+tell application "System Events"
+    set active_app to first application process whose frontmost is true
+end tell
+
 on update_xmark()
     tell application "{{ app }}"
-        if it is not running then
-            activate
-        end if
         set u to "file://{{ out }}"
-        set win_index to 0
         repeat with w in every window
-            set win_index to win_index + 1
             set tab_index to 0
             repeat with t in every tab of w
                 set tab_index to tab_index + 1
                 if URL of t = u then
                     tell t to reload
-                    set index of window win_index to 1
                     set active tab index of w to tab_index
+                    set index of w to 1
                     return
                 end if
             end repeat
         end repeat
-        make new window
-        set URL of active tab of window 1 to u
+        tell (make new window)
+            set URL of active tab of it to u
+            set index of it to 1
+        end tell
     end tell
 end update_xmark
 
@@ -30,24 +31,33 @@ tell application "Finder"
 end tell
 
 tell application "System Events"
-    repeat with p in (processes where background only is false)
-        tell p
-          repeat 2 times
-              if "{{ resize }}" is ">" and it is frontmost or "{{ resize }}" is "<" and name is "{{ app }}" then
-                  set size     of window 1 to {scr_width / 2, scr_height}
-                  set position of window 1 to {0, 0}
-              else if "{{ resize }}" is ">" and name is "{{ app }}" or "{{ resize }}" is "<" and it is frontmost then
-                  set size     of window 1 to {scr_width / 2, scr_height}
-                  set position of window 1 to {0 + scr_width / 2, 0}
-              else if "{{ resize }}" is "+" and it is frontmost or "{{ resize }}" is "-" and name is "{{ app }}" then
-                  set size     of window 1 to {scr_width, scr_height / 2}
-                  set position of window 1 to {0, scr_height / 2}
-              else if "{{ resize }}" is "+" and name is "{{ app }}" or "{{ resize }}" is "-" and it is frontmost then
-                  set size     of window 1 to {scr_width, scr_height / 2}
-                  set position of window 1 to {0, 0}
-              end if
-          end repeat
-        end tell
+    set chrome_app to application process "{{ app }}"
+    repeat 2 times
+        if "{{ resize }}" is ">" then
+            set position of window 1 of active_app to {0, 0}
+            set position of window 1 of chrome_app to {0 + scr_width / 2, 0}
+            set size     of window 1 of active_app to {scr_width / 2, scr_height}
+            set size     of window 1 of chrome_app to {scr_width / 2, scr_height}
+        else if "{{ resize }}" is "<" then
+            set position of window 1 of active_app to {0 + scr_width / 2, 0}
+            set position of window 1 of chrome_app to {0, 0}
+            set size     of window 1 of active_app to {scr_width / 2, scr_height}
+            set size     of window 1 of chrome_app to {scr_width / 2, scr_height}
+        else if "{{ resize }}" is "+" then
+            set position of window 1 of active_app to {0, scr_height / 2}
+            set position of window 1 of chrome_app to {0, 0}
+            set size     of window 1 of active_app to {scr_width, scr_height / 2}
+            set size     of window 1 of chrome_app to {scr_width, scr_height / 2}
+        else if "{{ resize }}" is "-" then
+            set position of window 1 of active_app to {0, 0}
+            set position of window 1 of chrome_app to {0, scr_height / 2}
+            set size     of window 1 of active_app to {scr_width, scr_height / 2}
+            set size     of window 1 of chrome_app to {scr_width, scr_height / 2}
+        end if
     end repeat
 end tell
+
+if frontmost of active_app is not true
+    tell application (name of active_app) to activate
+end if
 
