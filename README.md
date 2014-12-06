@@ -3,8 +3,8 @@ vim-xmark
 
 Markdown preview on OS X. Uses AppleScript to resize the windows.
 
-Prerequisite
-------------
+Prerequisites
+-------------
 
 Xmark requires [pandoc][p] and [Google Chrome][c].
 
