@@ -62,5 +62,6 @@ end tell
 
 repeat while frontmost of active_app is false
     tell application (name of active_app) to activate
+    delay 0.5
 end repeat
 
