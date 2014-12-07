@@ -18,6 +18,9 @@ on update_xmark()
             end repeat
         end repeat
         tell (make new window)
+            repeat while visible of it is false
+                delay 0.5
+            end repeat
             set URL of active tab of it to u
             set index of it to 1
         end tell
@@ -57,7 +60,7 @@ tell application "System Events"
     end repeat
 end tell
 
-if frontmost of active_app is not true
+repeat while frontmost of active_app is false
     tell application (name of active_app) to activate
-end if
+end repeat
 
