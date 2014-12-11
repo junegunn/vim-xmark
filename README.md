@@ -6,11 +6,7 @@ Markdown preview on OS X. Uses AppleScript to resize the windows.
 Prerequisites
 -------------
 
-Xmark requires [pandoc][p] and [Google Chrome][c].
-
-```
-brew install pandoc
-```
+Xmark requires [Homebrew][b] and [Google Chrome][c].
 
 Installation
 ------------
@@ -25,7 +21,7 @@ Usage
 -----
 
 `:Xmark` command is added for Markdown files. After running the command, the
-rendered content will be loaded on the browser every time you save the file.
+rendered content will be reloaded on the browser every time you save the file.
 
 ```vim
 " Does not resize nor move the windows
@@ -58,9 +54,7 @@ to the list.)
 Known issues
 ------------
 
-- Resizing may not work if the terminal emulator is in fullscreen mode
-- Currently only supports Chrome
-- May have issues with multiple displays
+- Resizing does not work if the terminal emulator is in fullscreen mode
 
 Acknowledgment
 --------------
@@ -72,5 +66,6 @@ License
 
 [MIT](http://opensource.org/licenses/MIT)
 
+[b]: http://brew.sh/
 [p]: http://johnmacfarlane.net/pandoc/
 [c]: http://www.google.com/chrome/

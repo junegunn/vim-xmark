@@ -33,7 +33,8 @@ let s:dir = expand('<sfile>:p:h')
 let s:files = {
 \ 'css':    s:dir . '/css/pandoc.css',
 \ 'update': s:dir . '/applescript/update.scpt',
-\ 'close':  s:dir . '/applescript/close.scpt'
+\ 'close':  s:dir . '/applescript/close.scpt',
+\ 'xsize':  s:dir . '/ext/xsize'
 \ }
 let s:app = 'Google Chrome'
 let s:tmp = {}
@@ -53,6 +54,12 @@ function! s:init_templates()
   endif
 endfunction
 
+function! s:warn(msg)
+  echohl WarningMsg
+  echom a:msg
+  echohl None
+endfunction
+
 function! s:xmark(resize, bang)
   let grp = '_xmark_buffer_' . bufnr('%') . '_'
   if a:bang
@@ -65,13 +72,38 @@ function! s:xmark(resize, bang)
   endif
 
   if !executable('pandoc')
-    echohl WarningMsg
-    echom 'pandoc is not found. Try `brew install pandoc`'
-    echohl None
-    return
+    if executable('brew')
+      call s:warn('pandoc is not found. Installing it with Homebrew ..')
+      sleep 1
+      silent !brew install pandoc
+      redraw!
+      if v:shell_error
+        call s:warn('Failed to install pandoc with Homebrew')
+        return
+      endif
+    else
+      call s:warn('pandoc is not found. Install Homebrew and try `brew install pandoc`.')
+      return
+    endif
   endif
 
-  let b:xmark_resize = a:resize
+  if !executable(s:files.xsize)
+    if executable('make')
+      call s:warn('Building required executable ..')
+      sleep 1
+      cd s:dir
+      silent !make
+      redraw!
+      cd -
+      if v:shell_error
+        call s:warn('Build failure')
+        return
+      endif
+    else
+      call s:warn('Try `make` to build the required executable')
+      return
+    endif
+  endif
 
   call s:init_templates()
 
@@ -85,6 +117,7 @@ function! s:xmark(resize, bang)
     autocmd BufUnload    <buffer> silent! call delete(remove(s:tmp, expand('<abuf>')))
     autocmd BufWritePost <buffer> call s:reload()
   augroup END
+  let b:xmark_resize = a:resize
 endfunction
 
 function! s:render(template, vars)
@@ -100,12 +133,17 @@ function! s:reload()
     silent! set nofullscreen
   endif
 
+  let [x, y, w, h] = split(system(s:files.xsize))[0:3]
   let script = s:render('update', {
         \ 'app':    s:app,
         \ 'title':  expand('%:t'),
         \ 'src':    expand('%:p'),
         \ 'out':    s:tmp[bufnr('%')],
         \ 'resize': b:xmark_resize,
+        \ 'x':      x,
+        \ 'y':      y,
+        \ 'w':      w,
+        \ 'h':      h,
         \ 'css':    s:files.css })
   redraw
   echon 'Rendering the page'
