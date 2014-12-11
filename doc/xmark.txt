@@ -1,9 +1,9 @@
-xmark.txt	xmark	Last change: December 4 2014
+xmark.txt	xmark	Last change: December 12 2014
 XMARK - TABLE OF CONTENTS                                      *xmark* *xmark-toc*
 ==============================================================================
 
   vim-xmark
-    Prerequisite                                                     |xmark-1|
+    Prerequisites                                                    |xmark-1|
     Installation                                                     |xmark-2|
     Usage                                                            |xmark-3|
     Known issues                                                     |xmark-4|
@@ -18,15 +18,13 @@ Markdown preview on OS X. Uses AppleScript to resize the windows.
 
 
                                                                        *xmark-1*
-PREREQUISITE                                                *xmark-prerequisite*
+PREREQUISITES                                              *xmark-prerequisites*
 ==============================================================================
 
-Xmark requires {pandoc}{1} and {Google Chrome}{2}.
->
-    brew install pandoc
-<
-                                         {1} http://johnmacfarlane.net/pandoc/
-                                         {2} http://www.google.com/chrome/
+Xmark requires {Homebrew}{1} and {Google Chrome}{2}.
+
+                                             {1} http://brew.sh/
+                                             {2} http://www.google.com/chrome/
 
 
                                                                        *xmark-2*
@@ -47,7 +45,7 @@ USAGE                                                              *xmark-usage*
                                                                         *:Xmark*
 
 `:Xmark` command is added for Markdown files. After running the command, the
-rendered content will be loaded on the browser every time you save the file.
+rendered content will be reloaded on the browser every time you save the file.
 >
     " Does not resize nor move the windows
     :Xmark
@@ -80,9 +78,7 @@ to the list.)
 KNOWN ISSUES                                                *xmark-known-issues*
 ==============================================================================
 
- - Resizing may not work if the terminal emulator is in fullscreen mode
- - Currently only supports Chrome
- - May have issues with multiple displays
+ - Resizing does not work if the terminal emulator is in fullscreen mode
 
 
                                                                        *xmark-5*
