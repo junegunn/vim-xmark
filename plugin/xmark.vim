@@ -60,6 +60,14 @@ function! s:warn(msg)
   echohl None
 endfunction
 
+function! s:tempname()
+  if filewritable(expand('%:p:h'))
+    return fnamemodify('.xmark.'.expand('%:t').'.html', ':p')
+  else
+    return tempname() . '.html'
+  endif
+endfunction
+
 function! s:xmark(resize, bang)
   let grp = '_xmark_buffer_' . bufnr('%') . '_'
   if a:bang
@@ -108,7 +116,7 @@ function! s:xmark(resize, bang)
   call s:init_templates()
 
   if !has_key(s:tmp, bufnr('%'))
-    let s:tmp[bufnr('%')] = tempname() . '.html'
+    let s:tmp[bufnr('%')] = s:tempname()
   endif
 
   execute 'augroup' grp
