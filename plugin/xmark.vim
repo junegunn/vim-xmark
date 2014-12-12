@@ -79,6 +79,11 @@ function! s:xmark(resize, bang)
     return
   endif
 
+  if !executable('osascript')
+    call s:warn('osascript is not found')
+    return
+  endif
+
   if !executable('pandoc')
     if executable('brew')
       call s:warn('pandoc is not found. Installing it with Homebrew ..')
