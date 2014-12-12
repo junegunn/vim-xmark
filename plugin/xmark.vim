@@ -146,7 +146,13 @@ function! s:reload()
     silent! set nofullscreen
   endif
 
-  let [x, y, w, h] = split(system(s:files.xsize))[0:3]
+  let output = substitute(system(s:files.xsize), '\n$', '', '')
+  if v:shell_error
+    echoerr output
+    return
+  endif
+
+  let [x, y, w, h] = split(output)[0:3]
   let script = s:render('update', {
         \ 'app':    s:app,
         \ 'title':  expand('%:t'),

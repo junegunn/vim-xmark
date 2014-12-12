@@ -37,13 +37,13 @@ const char* command =
 
 std::string exec(const char* cmd) {
   FILE* pipe = popen(cmd, "r");
-  if (!pipe) return "";
+  if (!pipe) exit(1);
 
   char buf[128];
   std::ostringstream ss;
   while (!feof(pipe) && fgets(buf, sizeof(buf), pipe) != NULL)
     ss << buf;
-  pclose(pipe);
+  if (pclose(pipe)) exit(1);
   return ss.str();
 }
 
