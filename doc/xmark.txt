@@ -1,4 +1,4 @@
-xmark.txt	xmark	Last change: December 12 2014
+xmark.txt	xmark	Last change: December 14 2014
 XMARK - TABLE OF CONTENTS                                      *xmark* *xmark-toc*
 ==============================================================================
 
@@ -33,7 +33,7 @@ INSTALLATION                                                *xmark-installation*
 
 Using {vim-plug}{3}:
 >
-    Plug 'junegunn/vim-xmark'
+    Plug 'junegunn/vim-xmark', { 'do': 'make' }
 <
                                       {3} https://github.com/junegunn/vim-plug
 
@@ -68,10 +68,10 @@ rendered content will be reloaded on the browser every time you save the file.
     " Turn off Xmark
     :Xmark!
 <
-If you see `osascript is not allowed assistive access` message, add your
-terminal emulator to the list in `System Preferences` -> `Security & Privacy`
--> `Privacy` -> `Accessibility`. (You can drag and drop the application icon
-to the list.)
+If you see an error (e.g. `osascript is not allowed assistive access`), make
+sure that your terminal emulator is in the list in `System Preferences` ->
+`Security & Privacy` -> `Privacy` -> `Accessibility`. (You can drag and drop
+the application icon to the list.)
 
 
                                                                        *xmark-4*
