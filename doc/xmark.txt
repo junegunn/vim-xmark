@@ -1,4 +1,4 @@
-xmark.txt	xmark	Last change: December 14 2014
+xmark.txt	xmark	Last change: December 20 2014
 XMARK - TABLE OF CONTENTS                                      *xmark* *xmark-toc*
 ==============================================================================
 
@@ -85,14 +85,23 @@ KNOWN ISSUES                                                *xmark-known-issues*
 ACKNOWLEDGMENT                                            *xmark-acknowledgment*
 ==============================================================================
 
-CSS is based on: https://gist.github.com/killercup/5917178
+ - {GitHub style CSS}{4} is based on {github-markdown-css}{5} by {Sindre
+   Sorhus}{6} licensed under {MIT}{7}
+ - Previous version of CSS was based on:
+   https://gist.github.com/killercup/5917178
+
+                       {4} plugin/css/github-markdown.css
+                       {5} https://github.com/sindresorhus/github-markdown-css
+                       {6} https://github.com/sindresorhus
+                       {7} http://opensource.org/licenses/MIT
 
 
                                                                        *xmark-6*
 LICENSE                                                          *xmark-license*
 ==============================================================================
 
-{MIT}{4}
+{MIT}{7}
+
 
 ==============================================================================
 vim:tw=78:sw=2:ts=2:ft=help:norl:nowrap:

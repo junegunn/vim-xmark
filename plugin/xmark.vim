@@ -31,7 +31,7 @@ set cpo&vim
 
 let s:dir = expand('<sfile>:p:h')
 let s:files = {
-\ 'css':    s:dir . '/css/pandoc.css',
+\ 'css':    s:dir . '/css/github-markdown.css',
 \ 'update': s:dir . '/applescript/update.scpt',
 \ 'close':  s:dir . '/applescript/close.scpt',
 \ 'xsize':  s:dir . '/ext/xsize'
