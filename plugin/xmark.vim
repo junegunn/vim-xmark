@@ -68,8 +68,12 @@ function! s:tempname()
   endif
 endfunction
 
+function! s:grp(buf)
+  return '_xmark_buffer_' . a:buf . '_'
+endfunction
+
 function! s:xmark(resize, bang)
-  let grp = '_xmark_buffer_' . bufnr('%') . '_'
+  let grp = s:grp(bufnr('%'))
   if a:bang
     execute 'augroup' grp
       autocmd!
@@ -128,6 +132,7 @@ function! s:xmark(resize, bang)
     autocmd!
     " BufUnload is triggered twice for some reason so we simply put silent!
     autocmd BufUnload    <buffer> silent! call delete(remove(s:tmp, expand('<abuf>')))
+          \| silent! execute 'autocmd!' s:grp(expand('<abuf>'))
     autocmd BufWritePost <buffer> call s:reload()
   augroup END
   let b:xmark_resize = a:resize
