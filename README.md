@@ -3,6 +3,17 @@ vim-xmark
 
 Markdown preview on OS X. Uses AppleScript to resize the windows.
 
+Screenshot
+----------
+
+### `Xmark>` on iTerm2
+
+![](https://cloud.githubusercontent.com/assets/700826/6095309/75bd9c24-af99-11e4-8624-6f709a68a731.png)
+
+### `Xmark<` on MacVim
+
+![](https://cloud.githubusercontent.com/assets/700826/6095308/751f5d84-af99-11e4-8902-c60805fa1ea6.png)
+
 Prerequisites
 -------------
 
