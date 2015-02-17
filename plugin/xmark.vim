@@ -108,7 +108,7 @@ function! s:xmark(resize, bang)
     if executable('make')
       call s:warn('Building required executable ..')
       sleep 1
-      cd s:dir
+      execute 'cd' s:dir.'/ext'
       silent !make
       redraw!
       cd -
