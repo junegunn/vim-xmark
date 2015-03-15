@@ -70,18 +70,17 @@ Known issues
 Acknowledgment
 --------------
 
-- [GitHub style CSS][css] is based on [github-markdown-css][gmc] by [Sindre Sorhus][s] licensed under [MIT][m]
+- [GitHub style CSS][css] is based on [github-markdown-css][gmc] by [Sindre Sorhus][s] licensed under MIT
 - Previous version of CSS was based on: https://gist.github.com/killercup/5917178
 
 License
 -------
 
-[MIT][m]
+MIT
 
 [b]: http://brew.sh/
 [p]: http://johnmacfarlane.net/pandoc/
 [c]: http://www.google.com/chrome/
 [gmc]: https://github.com/sindresorhus/github-markdown-css
 [s]: https://github.com/sindresorhus
-[m]: http://opensource.org/licenses/MIT
 [css]: plugin/css/github-markdown.css
