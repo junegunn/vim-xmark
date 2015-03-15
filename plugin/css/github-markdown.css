@@ -370,7 +370,7 @@ ul ul,
 ul ol,
 ol ol,
 ol ul {
-  margin-top: -16px;
+  margin-top: 0px;
   margin-bottom: 0;
 }
 
