@@ -62,7 +62,7 @@ endfunction
 
 function! s:tempname()
   if filewritable(expand('%:p:h'))
-    return fnamemodify('.xmark.'.expand('%:t').'.html', ':p')
+    return expand('%:p:h').'/.xmark.'.expand('%:t').'.html'
   else
     return tempname() . '.html'
   endif
