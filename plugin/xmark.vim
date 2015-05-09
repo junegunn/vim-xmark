@@ -34,6 +34,7 @@ let s:files = {
 \ 'css':    s:dir . '/css/github-markdown.css',
 \ 'update': s:dir . '/applescript/update.scpt',
 \ 'close':  s:dir . '/applescript/close.scpt',
+\ 'access': s:dir . '/applescript/accessibility.scpt',
 \ 'xsize':  s:dir . '/ext/xsize'
 \ }
 let s:app = 'Google Chrome'
@@ -155,7 +156,12 @@ function! s:reload()
 
   let output = substitute(system(s:files.xsize), '\n$', '', '')
   if v:shell_error
-    echoerr output
+    if stridx(output, '(-1719)') >= 0
+      call s:warn(output)
+      call system('osascript '.s:files.access)
+    else
+      echoerr output
+    endif
     return
   endif
 

@@ -58,9 +58,9 @@ rendered content will be reloaded on the browser every time you save the file.
 ```
 
 If you see an error (e.g. `osascript is not allowed assistive access`), make
-sure that your terminal emulator is in the list in `System Preferences` ->
-`Security & Privacy` -> `Privacy` -> `Accessibility`. (You can drag and drop
-the application icon to the list.)
+sure that your terminal emulator (or MacVim) is in the list in `System
+Preferences` -> `Security & Privacy` -> `Privacy` -> `Accessibility`. (You can
+drag and drop the application icon to the list.)
 
 Known issues
 ------------
