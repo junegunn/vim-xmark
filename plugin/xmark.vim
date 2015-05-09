@@ -136,6 +136,8 @@ function! s:xmark(resize, bang)
     autocmd BufWritePost <buffer> call s:reload()
   augroup END
   let b:xmark_resize = a:resize
+
+  call s:reload()
 endfunction
 
 function! s:render(template, vars)
