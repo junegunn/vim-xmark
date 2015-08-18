@@ -80,7 +80,11 @@ function! s:xmark(resize, bang)
       autocmd!
     augroup END
     execute 'augroup!' grp
-    silent! call system(s:render('close', { 'app': s:app, 'out': s:tmp[bufnr('%')] }))
+    if has_key(s:tmp, bufnr('%'))
+      let tmp = remove(s:tmp, bufnr('%'))
+      silent! call system(s:render('close', { 'app': s:app, 'out': tmp }))
+      silent! call delete(tmp)
+    endif
     return
   endif
 
