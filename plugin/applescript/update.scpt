@@ -4,7 +4,7 @@ end tell
 
 on update_xmark()
     tell application "{{ app }}"
-        set u to "file://{{ out }}"
+        set u to "file://{{ outurl }}"
         repeat with w in every window
             set tab_index to 0
             repeat with t in every tab of w
