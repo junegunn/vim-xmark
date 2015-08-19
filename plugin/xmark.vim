@@ -73,6 +73,10 @@ function! s:grp(buf)
   return '_xmark_buffer_' . a:buf . '_'
 endfunction
 
+function! s:urlencode(input)
+  return substitute(a:input, '[^a-zA-Z0-9_./-]', '\=printf("%%%02X", char2nr(submatch(0)))', 'g')
+endfunction
+
 function! s:xmark(resize, bang)
   let grp = s:grp(bufnr('%'))
   if a:bang
@@ -82,7 +86,7 @@ function! s:xmark(resize, bang)
     execute 'augroup!' grp
     if has_key(s:tmp, bufnr('%'))
       let tmp = remove(s:tmp, bufnr('%'))
-      silent! call system(s:render('close', { 'app': s:app, 'out': tmp }))
+      silent! call system(s:render('close', { 'app': s:app, 'outurl': s:urlencode(tmp) }))
       silent! call delete(tmp)
     endif
     return
@@ -170,11 +174,13 @@ function! s:reload()
   endif
 
   let [x, y, w, h] = split(output)[0:3]
+  let path = s:tmp[bufnr('%')]
   let script = s:render('update', {
         \ 'app':    s:app,
         \ 'title':  expand('%:t'),
         \ 'src':    expand('%:p'),
-        \ 'out':    s:tmp[bufnr('%')],
+        \ 'out':    path,
+        \ 'outurl': s:urlencode(path),
         \ 'resize': b:xmark_resize,
         \ 'x':      x,
         \ 'y':      y,
