@@ -73,9 +73,18 @@ function! s:grp(buf)
   return '_xmark_buffer_' . a:buf . '_'
 endfunction
 
-function! s:urlencode(input)
-  return substitute(a:input, '[^a-zA-Z0-9_./-]', '\=printf("%%%02X", char2nr(submatch(0)))', 'g')
-endfunction
+if has('ruby')
+  function! s:urlencode(input)
+    ruby << EOF
+    require 'uri'
+    VIM.command %[return "#{URI.encode VIM.evaluate('a:input')}"]
+EOF
+  endfunction
+else
+  function! s:urlencode(input)
+    return substitute(a:input, '[^a-zA-Z0-9_./-]', '\=printf("%%%02X", char2nr(submatch(0)))', 'g')
+  endfunction
+endif
 
 function! s:xmark(resize, bang)
   let grp = s:grp(bufnr('%'))
