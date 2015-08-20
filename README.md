@@ -25,7 +25,7 @@ Installation
 Using [vim-plug](https://github.com/junegunn/vim-plug):
 
 ```vim
-Plug 'junegunn/vim-xmark', { 'do': 'make' }
+Plug 'junegunn/vim-xmark'
 ```
 
 Usage
