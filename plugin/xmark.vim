@@ -73,7 +73,15 @@ function! s:grp(buf)
   return '_xmark_buffer_' . a:buf . '_'
 endfunction
 
-if has('ruby')
+if has('python')
+  function! s:urlencode(input)
+    python << EOF
+import vim
+import urllib
+vim.command('return "{0}"'.format(urllib.quote(vim.eval('a:input'), safe = ':/')))
+EOF
+  endfunction
+elseif has('ruby')
   function! s:urlencode(input)
     ruby << EOF
     require 'uri'
