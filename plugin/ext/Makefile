@@ -1,7 +1,7 @@
 all: xsize
 
 xsize: main.cc
-	g++ -framework ApplicationServices $^ -o $@
+	/usr/bin/g++ -framework ApplicationServices $^ -o $@
 
 clean:
 	rm -f xsize
