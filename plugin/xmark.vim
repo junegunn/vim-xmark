@@ -159,11 +159,21 @@ function! s:xmark(resize, bang)
     " BufUnload is triggered twice for some reason so we simply put silent!
     autocmd BufUnload    <buffer> silent! call delete(remove(s:tmp, expand('<abuf>')))
           \| silent! execute 'autocmd!' s:grp(expand('<abuf>'))
-    autocmd BufWritePost <buffer> call s:reload()
+    autocmd BufWritePost <buffer> call s:queue(0, 1)
+    if has('job') && has('timers')
+      autocmd TextChanged,TextChangedI <buffer> call s:queue(250, 0)
+    endif
   augroup END
   let b:xmark_resize = a:resize
 
-  call s:reload()
+  call s:reload(1)
+endfunction
+
+function! s:queue(timeout, verbose)
+  if exists('s:timer')
+    call timer_stop(s:timer)
+  endif
+  let s:timer = timer_start(a:timeout, {_ -> s:reload(a:verbose)})
 endfunction
 
 function! s:render(template, vars)
@@ -174,28 +184,60 @@ function! s:render(template, vars)
   return output
 endfunction
 
-function! s:reload()
+function! s:exit_cb(exit, verbose, temps)
+  if a:verbose
+    redraw
+  endif
+
+  if a:exit
+    if a:verbose
+      call s:warn(printf('Failed to reload the page (exit status: %d / script: %s)',
+            \ a:exit, a:temps.script))
+    endif
+  else
+    if a:verbose
+      echo 'Reloaded the page'
+    endif
+    for temp in values(a:temps)
+      if filereadable(temp)
+        call delete(temp)
+      endif
+    endfor
+  endif
+endfunction
+
+function! s:update_screen_size()
+  let output = substitute(system(s:files.xsize), '\n$', '', '')
+  if v:shell_error
+    call s:warn(output)
+    if stridx(output, '(-1719)') >= 0
+      call system('osascript '.s:files.access)
+    endif
+    unlet! s:screen_size
+    return 0
+  endif
+  let s:screen_size = split(output)
+  return 1
+endfunction
+
+function! s:reload(verbose)
+  unlet! s:timer
+
   if !empty(b:xmark_resize)
     silent! set nofullscreen
   endif
 
-  let output = substitute(system(s:files.xsize), '\n$', '', '')
-  if v:shell_error
-    if stridx(output, '(-1719)') >= 0
-      call s:warn(output)
-      call system('osascript '.s:files.access)
-    else
-      echoerr output
-    endif
+  if !exists('s:screen_size') && !s:update_screen_size()
     return
   endif
-
-  let [x, y, w, h] = split(output)[0:3]
+  let [x, y, w, h] = s:screen_size
   let path = s:tmp[bufnr('%')]
+  let temps = { 'src': tempname(), 'script': tempname() }
+  call writefile(getline(1, '$'), temps.src)
   let script = s:render('update', {
         \ 'app':    s:app,
         \ 'title':  expand('%:t'),
-        \ 'src':    expand('%:p'),
+        \ 'src':    temps.src,
         \ 'out':    path,
         \ 'outurl': s:urlencode(path),
         \ 'resize': b:xmark_resize,
@@ -204,14 +246,19 @@ function! s:reload()
         \ 'w':      w,
         \ 'h':      h,
         \ 'css':    s:files.css })
-  redraw
-  echon 'Rendering the page'
-  let output = system(script)
-  redraw
-  if v:shell_error
-    echo 'Failed to reload the page: ' . output
+
+  if a:verbose
+    redraw
+    echon 'Rendering the page'
+  endif
+
+  call writefile(split(script, "\n"), temps.script)
+  if has('job')
+    call job_start('sh '.temps.script,
+          \ {'exit_cb': {_job, exit -> s:exit_cb(exit, a:verbose, temps)}})
   else
-    echo 'Reloaded the page'
+    let output = system('sh '.temps.script)
+    call s:exit_cb(v:shell_error, 1, temps)
   endif
 endfunction
 

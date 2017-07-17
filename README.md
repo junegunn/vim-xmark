@@ -3,6 +3,8 @@ vim-xmark
 
 Markdown preview on OS X. Uses AppleScript to resize the windows.
 
+Vim 8 is required for asynchronous rendering.
+
 Screenshot
 ----------
 
