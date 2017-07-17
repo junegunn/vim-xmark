@@ -33,6 +33,7 @@ let s:dir = expand('<sfile>:p:h')
 let s:files = {
 \ 'css':    s:dir . '/css/github-markdown.css',
 \ 'update': s:dir . '/applescript/update.scpt',
+\ 'resize': s:dir . '/applescript/resize.scpt',
 \ 'close':  s:dir . '/applescript/close.scpt',
 \ 'access': s:dir . '/applescript/accessibility.scpt',
 \ 'xsize':  s:dir . '/ext/xsize'
@@ -40,18 +41,20 @@ let s:files = {
 let s:app = 'Google Chrome'
 let s:tmp = {}
 
+function! s:osawrap(...)
+  let lines = ['osascript -e "$(cat << EOF']
+  call extend(lines, map(copy(a:000), 'join(readfile(v:val), "\n")'))
+  call extend(lines, ['EOF', ')"'])
+  return join(lines, "\n")
+endfunction
+
 function! s:init_templates()
   if !exists('s:template')
-    let s:template = {}
-    let s:template.update = join(
-    \ [ 'pandoc -f markdown_github-hard_line_breaks -t html5 -s -M "title:{{ title }} / xmark" -H "{{ css }}" "{{ src }}" > "{{ out }}" &&',
-      \ 'osascript -e "$(cat << EOF',
-      \ join(readfile(s:files.update), "\n"),
-      \ 'EOF', ')"' ], "\n")
-    let s:template.close = join(
-    \ [ 'osascript -e "$(cat << EOF',
-      \ join(readfile(s:files.close), "\n"),
-      \ 'EOF', ')"' ], "\n")
+    let pandoc_prefix = 'pandoc -f markdown_github-hard_line_breaks -t html5 -s -M "title:{{ title }} / xmark" -H "{{ css }}" "{{ src }}" > "{{ out }}" &&'
+    let s:template = {
+        \ 'refresh': pandoc_prefix . s:osawrap(s:files.update, s:files.resize),
+        \ 'update':  pandoc_prefix . s:osawrap(s:files.update),
+        \ 'close':   s:osawrap(s:files.close) }
   endif
 endfunction
 
@@ -166,7 +169,9 @@ function! s:xmark(resize, bang)
   augroup END
   let b:xmark_resize = a:resize
 
-  call s:reload(1)
+  if s:update_screen_size()
+    call s:reload(1)
+  endif
 endfunction
 
 function! s:queue(timeout, verbose)
@@ -234,13 +239,14 @@ function! s:reload(verbose)
   let path = s:tmp[bufnr('%')]
   let temps = { 'src': tempname(), 'script': tempname() }
   call writefile(getline(1, '$'), temps.src)
-  let script = s:render('update', {
+  let script = s:render(a:verbose ? 'refresh' : 'update', {
         \ 'app':    s:app,
         \ 'title':  expand('%:t'),
         \ 'src':    temps.src,
         \ 'out':    path,
         \ 'outurl': s:urlencode(path),
         \ 'resize': b:xmark_resize,
+        \ 'bg':     a:verbose ? '' : '-- ',
         \ 'x':      x,
         \ 'y':      y,
         \ 'w':      w,
