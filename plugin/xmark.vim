@@ -237,12 +237,17 @@ function! s:reload(verbose)
   endif
   let [x, y, w, h] = s:screen_size
   let path = s:tmp[bufnr('%')]
-  let temps = { 'src': tempname(), 'script': tempname() }
-  call writefile(getline(1, '$'), temps.src)
+  let temps = { 'script': tempname() }
+  let src = expand('%:p')
+  if &modified
+    let temps.src = tempname()
+    call writefile(getline(1, '$'), temps.src)
+    let src = temps.src
+  endif
   let script = s:render(a:verbose ? 'refresh' : 'update', {
         \ 'app':    s:app,
         \ 'title':  expand('%:t'),
-        \ 'src':    temps.src,
+        \ 'src':    src,
         \ 'out':    path,
         \ 'outurl': s:urlencode(path),
         \ 'resize': b:xmark_resize,
