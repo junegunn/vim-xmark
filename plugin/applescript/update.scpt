@@ -16,7 +16,7 @@ on update_xmark()
                 set tab_index to 0
                 repeat with t in tabs of w
                     set tab_index to tab_index + 1
-                    if URL of t = u then
+                    if URL of t starts with u then
                         tell t to reload
                         {{ bg }} set active tab index of w to tab_index
                         {{ bg }} set index of w to 1
