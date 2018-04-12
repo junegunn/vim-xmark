@@ -32,6 +32,7 @@ set cpo&vim
 let s:dir = expand('<sfile>:p:h')
 let s:files = {
 \ 'css':    s:dir . '/css/github-markdown.css',
+\ 'header': s:dir . '/header/header.html',
 \ 'update': s:dir . '/applescript/update.scpt',
 \ 'resize': s:dir . '/applescript/resize.scpt',
 \ 'close':  s:dir . '/applescript/close.scpt',
@@ -50,7 +51,7 @@ endfunction
 
 function! s:init_templates()
   if !exists('s:template')
-    let pandoc_prefix = 'pandoc -f markdown_github-hard_line_breaks -t html5 -s -M "title:{{ title }} / xmark" -H "{{ css }}" "{{ src }}" > "{{ out }}" &&'
+    let pandoc_prefix = 'pandoc -f markdown_github-hard_line_breaks -t html5 -s -M "title:{{ title }} / xmark" -H "{{ css }}" -H "{{ header }}" "{{ src }}" > "{{ out }}" &&'
     let s:template = {
         \ 'refresh': pandoc_prefix . s:osawrap(s:files.update, s:files.resize),
         \ 'update':  pandoc_prefix . s:osawrap(s:files.update),
@@ -256,7 +257,8 @@ function! s:reload(verbose)
         \ 'y':      y,
         \ 'w':      w,
         \ 'h':      h,
-        \ 'css':    s:files.css })
+        \ 'css':    s:files.css,
+        \ 'header':    s:files.header })
 
   if a:verbose
     redraw

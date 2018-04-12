@@ -64,6 +64,25 @@ sure that your terminal emulator (or MacVim) is in the list in `System
 Preferences` -> `Security & Privacy` -> `Privacy` -> `Accessibility`. (You can
 drag and drop the application icon to the list.)
 
+## Math formula support
+![math2](https://user-images.githubusercontent.com/2245979/38654846-72ce78fe-3e4c-11e8-9057-bfd68e4a782b.png)
+To activate MatjJax uncomment script tag at '.vim/bundle/vim-xmark/header.html'.
+```
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX&#45;MML&#45;AM_CHTML' async></script>
+```
+
+Adding mathematical formulae to a markdown document simply requires you to use
+the MathJax delimiters to start and end each formula as follows:
+
+- For centered formulae, use \\\\[ and \\\\].
+- For inline formulae, use \\\\( and \\\\).
+
+Example
+```
+When \\(a \ne 0\\), there are two solutions to \\(ax^2 + bx + c = 0\\) and they are
+\\[x = {-b m \sqrt{b^2-4ac} \over 2a}.\\]
+```
+
 Known issues
 ------------
 
